@@ -30,7 +30,7 @@
                           <p class="card-text">Price : $20</p>
                         </div>
                         <div class="card-footer">
-                            <button onclick="addtocart('laptop 1' , 20)" class="btn btn-primary">Add To Cart</button>
+                            <button onclick="addtocart('laptop 1' , 20 ,1)" class="btn btn-primary">Add To Cart</button>
                         </div>
                       </div>
                 </div>
@@ -41,7 +41,7 @@
                           <p class="card-text">Price : $30</p>
                         </div>
                         <div class="card-footer">
-                            <button onclick="addtocart('laptop 2' , 30)" class="btn btn-primary">Add To Cart</button>
+                            <button onclick="addtocart('laptop 2' , 30 ,1)" class="btn btn-primary">Add To Cart</button>
                         </div>
                       </div>
                 </div>
@@ -52,7 +52,7 @@
                           <p class="card-text">Price : $50</p>
                         </div>
                         <div class="card-footer">
-                            <button onclick="addtocart('laptop 3' , 50)" class="btn btn-primary">Add To Cart</button>
+                            <button onclick="addtocart('laptop 3' , 50 ,1)" class="btn btn-primary">Add To Cart</button>
                         </div>
                       </div>
                 </div>
@@ -65,7 +65,7 @@
                           <p class="card-text">Price : $40</p>
                         </div>
                         <div class="card-footer">
-                            <button onclick="addtocart('laptop 4' , 40)" class="btn btn-primary">Add To Cart</button>
+                            <button onclick="addtocart('laptop 4' , 40 ,1)" class="btn btn-primary">Add To Cart</button>
                         </div>
                       </div>
                 </div>
@@ -76,7 +76,7 @@
                           <p class="card-text">Price : $10</p>
                         </div>
                         <div class="card-footer">
-                            <button onclick="addtocart('laptop 5' , 10)" class="btn btn-primary">Add To Cart</button>
+                            <button onclick="addtocart('laptop 5' , 10 ,1)" class="btn btn-primary">Add To Cart</button>
                         </div>
                       </div>
                 </div>
@@ -87,7 +87,7 @@
                           <p class="card-text">Price : $60</p>
                         </div>
                         <div class="card-footer">
-                            <button onclick="addtocart('laptop 6' , 60)" class="btn btn-primary">Add To Cart</button>
+                            <button onclick="addtocart('laptop 6' , 60 ,1)" class="btn btn-primary">Add To Cart</button>
                         </div>
                       </div>
                 </div>
@@ -107,6 +107,7 @@
           <ul id="cartItems">
         </ul>
         <h4 id="totalprice"></h4>
+        <button class="btn-sm btn-primary" onclick="clearCart()" >Clear Cart</button>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
@@ -127,8 +128,8 @@
         cartItems.innerHTML = "<h4>cart is empty</h4>";
 
         
-        function addtocart(product , price){
-            cartItem.push({name : product , price : price})
+        function addtocart(product , price ,qty){
+            cartItem.push({name : product , price : price , qty : qty})
             total = total + price;
             
             
@@ -156,7 +157,7 @@
             cartItem.map((data , index)=>{
                 return(
                 str += `
-                <li>${data.name} - $${data.price} <button onclick="remove(${index} , ${data.price} )" class="btn-sm btn-primary my-2">-</button> 1 </li>
+                <li>${data.name} - $${data.price} <button onclick="remove(${index} , ${data.price} , ${data.qty} )" class="btn-sm btn-primary my-2">-</button> ${data.qty} <button onclick="add(${index} , ${data.price} , ${data.qty} )" class="btn-sm btn-primary my-2">+</button> </li>
                 `
                 )
             })
@@ -170,11 +171,36 @@
         
         updateCart();
         
-        function remove(id , price){
+        function remove(id , price ,qty){
+          if(qty === 1){
           cartItem.splice(id , 1);
           cartItemdata = JSON.stringify(cartItem);
           localStorage.setItem("data" , cartItemdata)
           total = total - price;
+          localStorage.setItem("price" , total)
+          updateCart()
+          }
+          else{
+          cartItem[id].qty -= 1; 
+          cartItemdata = JSON.stringify(cartItem);
+          localStorage.setItem("data" , cartItemdata)
+          total = total - price;
+          localStorage.setItem("price" , total)
+          updateCart()
+          }
+        }
+
+        function clearCart(){
+          localStorage.removeItem("data");
+          localStorage.removeItem("price");
+          updateCart()
+        }
+
+        function add(id , price , qty){
+          cartItem[id].qty += 1; 
+          cartItemdata = JSON.stringify(cartItem);
+          localStorage.setItem("data" , cartItemdata)
+          total = total + price;
           localStorage.setItem("price" , total)
           updateCart()
         }
