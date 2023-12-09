@@ -110,7 +110,7 @@
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="button" class="btn btn-primary">Save changes</button>
+          
         </div>
       </div>
     </div>
@@ -156,7 +156,7 @@
             cartItem.map((data , index)=>{
                 return(
                 str += `
-                <li>${data.name} - $${data.price}</li>
+                <li>${data.name} - $${data.price} <button onclick="remove(${index} , ${data.price} )" class="btn-sm btn-primary my-2">-</button> 1 </li>
                 `
                 )
             })
@@ -170,7 +170,14 @@
         
         updateCart();
         
-
+        function remove(id , price){
+          cartItem.splice(id , 1);
+          cartItemdata = JSON.stringify(cartItem);
+          localStorage.setItem("data" , cartItemdata)
+          total = total - price;
+          localStorage.setItem("price" , total)
+          updateCart()
+        }
     </script>
 </body>
 </html>
